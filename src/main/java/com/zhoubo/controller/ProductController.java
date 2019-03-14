@@ -92,5 +92,14 @@ public class ProductController {
 //		result.setData(datagrid);
 		return datagrid;
 	}
+	@RequestMapping("init")
+	@ResponseBody
+	public UIDatagrid<Product> productInit(){
+		return null;
+	};
+	
+	
+	
+	
 	
 }
