@@ -92,12 +92,18 @@ public class ProductController {
 //		result.setData(datagrid);
 		return datagrid;
 	}
+	//初始化商品信息页面，默认查询所有在售商品
 	@RequestMapping("init")
 	@ResponseBody
 	public UIDatagrid<Product> productInit(){
 		return null;
 	};
-	
+	//下载商品信息模板
+	@RequestMapping("/downloadFile")
+	@ResponseBody
+	public void downloadFile() {
+		
+	};
 	
 	
 	
