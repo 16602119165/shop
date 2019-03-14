@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+<!-- 引入EasyUI的样式文件-->
+	<link rel="stylesheet" type="text/css" href="../js/jquery-easyui/themes/default/easyui.css">
+	<!-- 引入EasyUI的图标样式文件-->
+	<link rel="stylesheet" type="text/css" href="../js/jquery-easyui/themes/icon.css">
+	<!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="../js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+	<!-- 引入jquery  -->
+	<script type="text/javascript" src="../js/jquery-easyui/jquery.min.js"></script>
+	<!-- 引入easyui   style="width:600px;height:600px;"-->
+	<script type="text/javascript" src="../js/jquery-easyui/jquery.easyui.min.js"></script>
+<meta charset="UTF-8">
+<title>Shop后台管理主页</title>
+<!-- <script type="text/javascript">
+$(function(){
+	var menutree = $('#menutree').tree({
+		url:'../main',
+		animate:'true',
+		lines:'true',
+		onClick: function(node){
+			var leaf = $('#menutree').tree('isLeaf',node.target);
+			if(leaf){
+				if($('#tabswin').tabs('exists',node.text)){
+					$('#tabswin').tabs('select',node.text);
+				}else{
+					var content = '<iframe id="fram'+node.id+'" scrolling="auto" frameborder="0" src="../'+node.name+'" style="width:100%;height:100%;"> </iframe>';   
+					$('#tabswin').tabs('add',{
+						title:node.text,
+						content:content,
+						closable:true,
+					});
+				}
+			}else{
+				if(node.state == 'close'){
+					$('#menutree').tree('expand',node.target);
+				}else{
+					$('#menutree').tree('collapse',node.target);
+				}
+			}
+		}
+	})
+});
+$('#tabswin').tabs('add',{    
+    title:"首页",
+    content:"欢迎您",    
+    closable:false,
+});
+</script> -->
+</head>
+<body>
+	<div id="cc" class="easyui-layout" fit='true' style="">
+	    <div data-options="region:'north',title:'welcome to shop system',split:true" style="height:100px;"></div>
+	    <!-- <div data-options="region:'south',title:'South Title',split:true" style="height:100px;"></div> -->
+	    <!-- <div data-options="region:'east',title:'East',split:true" style="width:100px;"></div> -->
+	    <div data-options="region:'west',title:'菜单',split:true" style="width:200px;">
+	    	<div>
+	    		<ul id="menutree"></ul>
+	    	</div>
+	    </div>
+	    <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
+			<div id="tt" class="easyui-tabs" fit="true" >
+			</div>
+	    </div>
+	</div>
+
+<script type="text/javascript">	
+/* $(function(){}) 该方式表示当前函数强制执行 */
+$(function(){
+	$('#menutree').tree({
+		url:'../../menuTree',
+		animate : true,
+		iconCls:'icon-edit',
+		lines:true,
+		loadFilter: function(data){
+            if (data.status == 0){
+                return data.data;
+            }
+        },
+		onClick:function(node){
+			/* if($('#tt').tabs('getTab',node.text == null)){
+				$('tt').tabs('add',{
+					title:node.text,
+					selected:true,
+					closable:true,
+					href:"/page/test.html"
+					
+				});
+			}else{/* 如果面板存在，则被选中 */
+				/* $('#tt').tabs('select',node.text)
+			} */ 
+			
+			var leaf = $('#menuTree').tree('isLeaf', node.target);
+			if(leaf){
+				//如果是叶子节点   则直接打开对应tab
+				if($('#tt').tabs('exists',node.text)){
+					$('#tt').tabs('select',node.text);//切换
+				}else{
+					 var content = '<iframe id="fram'+node.id+'" scrolling="auto" frameborder="0" src='+node.pageUrl+' style="width:100%;height:100%;" ></iframe>';
+					 $('#tt').tabs('add',{    
+					    title:node.text,
+					    content:content,    
+					    closable:true,
+					});//添加
+				}		
+			}
+		}
+	});
+});
+</script>
+
+</body>
+</html>

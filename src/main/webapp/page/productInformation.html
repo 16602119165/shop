@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<script type="text/javascript" src="../js/jquery-easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="../js/jquery-easyui/jquery.easyui.min.js"></script>
+<!-- 引入EasyUI的样式文件-->
+	<link rel="stylesheet" type="text/css" href="../js/jquery-easyui/themes/default/easyui.css">
+	<!-- 引入EasyUI的图标样式文件-->
+	<link rel="stylesheet" type="text/css" href="../js/jquery-easyui/themes/icon.css">
+	<!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="../js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+	<!-- 引入jquery  -->
+	<!-- 引入easyui  -->
+<title>商品信息管理</title>
+</head>
+<body class='easyui-layout' fit='true'>
+	<div region='north' data-options="title:'',collapsible:false" style="height: 80px;margin: 5px,5px,5px,5px">
+		<table>
+			<tr>
+				<td><span class="searchcss">商品分类<input id='categoryId' class="easyui-combobox" data-options="valueField:'id',textField:'text',editable:'false',url:'../category/product'" ></span> </td>
+				<td><span class="searchcss">商品状态<input class='easyui-textbox' type="text" id='productStat'></span> </td>
+				<td><span class="searchcss">商品名称<input class='easyui-textbox' type="text" id='productName'></span> </td>
+				<td><span class="searchcss">创建时间FROM<input class='easyui-datetimebox'  type="text" id='productCreateDateFrom'></span></td>
+				<td><span class="searchcss">创建时间TO<input class='easyui-datetimebox'  type="text" id='productCreateDateTo'></span></td>
+			</tr>
+		</table>
+	</div>
+	<div region='center' style="padding: 5px; width: 100%; height: 100%;">
+		<div id='datagrid' fit='true'></div>
+	</div>
+
+
+
+
+
+	
+<script type="text/javascript">
+	$(function(){
+		$('#datagrid').datagrid({
+			url:'',
+			pagination : true,
+			pageSize : 10,
+			pageList:[10,20,30,40],
+			rownumbers:true,
+			fit:true,
+			fitColumns : true,
+			nowarp : false,
+			border:false,
+			singleSelect:true,
+			columns:[[
+				{field:'id',title:'id',width:50},
+				{field:'productName',title:'商品名',width:100},
+				{field:'categoryParentId',title:'所属类目',width:100},  
+				{field:'productType',title:'商品类型',width:100},
+				{field:'productStock',title:'商品库存',width:100},
+				{field:'productCreateDate',title:'创建时间',width:100},
+				{field:'productUpdateTime',title:'更新时间',width:100},
+				{field:'productPrice',title:'售价',width:100},
+				{field:'productActivityPrice',title:'活动价',width:100},
+				{field:'productCreator',title:'创建者',width:100}   
+			]],
+			toolbar:[{
+				text:'增加',
+				iconCls:'icon-add',
+				handler:function(){
+				}},{
+				text:'删除',
+				iconCls:'icon-remove',
+				handler:function(){
+				}},{
+				text:'修改',
+				iconCls:'icon-edit',
+				handler:function(){
+				}},{
+				text:'查询',
+				iconCls:'icon-search',
+				handler:function(){
+						$('#datagrid').datagrid({
+							url : "../product/information",
+							pageNumber : 1,
+							queryParams : {
+								categoryId :$('#categoryId').combobox('getValue'),
+								categoryName :$('#categoryId').combobox('getText'),
+								productStat : $('#productStat').textbox('getValue'),
+								productName : $('#productName').textbox('getValue'),
+								productCreateDateFrom : $('#productCreateDateFrom').datetimebox('getValue'),
+								productCreateDateTo : $('#productCreateDateTo').datetimebox('getValue'),	
+							}
+						});					
+				} 
+			}
+			]
+		});
+		var categoryName = $('#categoryName').combobox('getValue');
+		
+	});
+</script>
+
+
+</body>
+</html>

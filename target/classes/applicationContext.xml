@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd  
+       http://www.springframework.org/schema/tx   
+       http://www.springframework.org/schema/tx/spring-tx.xsd  
+       http://www.springframework.org/schema/context   
+       http://www.springframework.org/schema/context/spring-context.xsd  
+       http://www.springframework.org/schema/aop  
+       http://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/mvc      
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/data/jpa 
+       http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.7.xsd
+       http://www.springframework.org/schema/task 
+       http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+       
+    
+       
+       
+       <!-- 配置注解包扫描 -->
+       <context:component-scan base-package="com.*" use-default-filters="true">
+		<context:exclude-filter type="annotation" 
+			expression="org.springframework.stereotype.Controller" />
+	</context:component-scan>
+       
+       <!-- 加载类路径下的db.properties文件 -->
+       <context:property-placeholder ignore-unresolvable="true" location="classpath:*.properties"/>
+       <!-- 配置druid数据源dataSource -->
+       <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+       destroy-method="close">
+        <property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="driverClassName" value="${jdbc.driver}" />
+        <property name="maxActive" value="10" />
+		<property name="minIdle" value="5" />
+       </bean>
+       
+       <!-- 与mybatis整合，配置sqlsessionFactoryBean -->
+       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+       		<!--数据源指向dataSource  -->
+       		<property name="dataSource" ref="dataSource"></property>
+       		<!-- 指定mapper文件的位置 -->
+			<property name="mapperLocations" value="classpath:/mapper/*.xml" />
+			<property name="configLocation" value="classpath:mybatis-config.xml"></property>
+		</bean>
+		
+		<!--sqlsession的实例，指向sqlsessionFactory -->
+		<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" >
+			<constructor-arg index="0">
+				<ref bean="sqlSessionFactory" />
+			</constructor-arg>
+		</bean>
+		
+       <!--扫描所有的mapper接口，让这些mapper能够自动注入  -->
+		<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+			<property name="basePackage" value="com.zhoubo.dao" />
+			<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		</bean>
+       
+       <!--事务管理器配置 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 开启注解事务 支队当前文件 -->
+	<tx:annotation-driven transaction-manager="transactionManager"
+		proxy-target-class="true" /><!-- 配置事务注解驱动，事务注解起作用 -->
+       <tx:annotation-driven />
+       
+       <!-- redis连接池配置 -->
+    <!-- <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig"> -->
+        <!-- 最大连接数 -->
+       <!--  <property name="maxTotal" value="30" /> -->
+        <!-- 最大空闲连接数 -->
+        <!-- <property name="maxIdle" value="10" /> -->
+        <!-- 每次释放连接的最大数目 -->
+        <!-- <property name="numTestsPerEvictionRun" value="1024" /> -->
+        <!-- 释放连接的扫描间隔（毫秒） -->
+        <!-- <property name="timeBetweenEvictionRunsMillis" value="30000" /> -->
+        <!-- 连接最小空闲时间 -->
+        <!-- <property name="minEvictableIdleTimeMillis" value="1800000" /> -->
+        <!-- 连接空闲多久后释放, 当空闲时间>该值 且 空闲连接>最大空闲连接数 时直接释放 -->
+        <!-- <property name="softMinEvictableIdleTimeMillis" value="10000" /> -->
+        <!-- 获取连接时的最大等待毫秒数,小于零:阻塞不确定的时间,默认-1 -->
+        <!-- <property name="maxWaitMillis" value="1500" /> -->
+        <!-- 在获取连接的时候检查有效性, 默认false -->
+       <!--  <property name="testOnBorrow" value="true" /> -->
+        <!-- 在空闲时检查有效性, 默认false -->
+       <!--  <property name="testWhileIdle" value="true" /> -->
+        <!-- 连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true -->
+        <!-- <property name="blockWhenExhausted" value="false" /> -->
+   <!--  </bean>	 -->
+		<!-- redis连接信息设置  -->
+      <!-- <bean id="jedisPool" class="redis.clients.jedis.JedisPool"> 
+		<constructor-arg index="0" ref="jedisPoolConfig"/> 
+		<constructor-arg index="1" value="127.0.0.1"/> 
+		<constructor-arg index="2" value="6379" type="int"/> 
+	 </bean> -->
+	 <!-- <bean id="jedisPool" class="redis.clients.jedis.JedisPool">
+	 	<constructor-arg index="0" ref="jedisPoolConfig"></constructor-arg>
+	 	<constructor-arg index="1" value="127.0.0.1"></constructor-arg>
+	 	<constructor-arg index="2" value="6379" type="int"></constructor-arg>
+	 </bean> -->
+	 
+	 
+	 <!-- rabbit 连接工厂配置 -->
+	<rabbit:connection-factory id="connectionFactory"
+		host="${rabbitmq.host}"
+		port="${rabbitmq.port}"
+		virtual-host="${rabbitmq.vhost}"
+		username="${rabbitmq.username}"
+		password="${rabbitmq.password}"
+	/>
+	<!-- 使用rabbit-admin在容器启动时，自动获取exchange和queue，并且注册到rabbitmq服务器中 
+	rabbitmq-admin主要用于创建队列，绑定消息等-->
+	<rabbit:admin connection-factory="connectionFactory"/>
+	
+	<!-- 指定rabbitmq队列名称 -->
+	<rabbit:queue name="boy" durable="true" auto-delete="false" exclusive="false"></rabbit:queue>
+    <!-- 指定rabbitmq队列名称 -->
+	<rabbit:queue name="girl" durable="true" auto-delete="false" exclusive="false"></rabbit:queue>
+	<!-- 指定rabbitmq队列名称 -->
+	<rabbit:queue name="love" durable="true" auto-delete="false" exclusive="false"></rabbit:queue>
+	 
+	 <!-- 指定rabbitmq交换机（exchange）根据 什么模式进行转发（topic：按模式匹配，
+	 direct（按routeKey）还有两种） 该交换机绑定队列--> 
+     <rabbit:topic-exchange name="topicExchange">
+     	<rabbit:bindings>
+     		<rabbit:binding queue="boy" pattern="boy.*.*"></rabbit:binding>
+     		<rabbit:binding queue="girl" pattern="*.*.girl"></rabbit:binding>
+     		<rabbit:binding queue="love" pattern="*.love.*"></rabbit:binding>
+     	</rabbit:bindings>
+     </rabbit:topic-exchange> 
+       
+     <!-- 定义操作模板，还可用 message-converter属性指定消息转换器，
+     此处不配置，spring会给我们使用默认的转换器把消息转换成message对象 -->
+    
+    <rabbit:template id="amqpTemplate" 
+    	connection-factory="connectionFactory" 
+    	exchange="topicExchange"> 
+    </rabbit:template>
+    
+    <!-- 消费者 -->
+    <bean id="consumer" class="com.zhoubo.rabbit.Consumer"></bean>
+    <bean id="consumer2" class="com.zhoubo.rabbit.Consumer2"></bean>
+    <bean id="consumer3" class="com.zhoubo.rabbit.Consumer3"></bean>
+    
+    <!-- 监听消费者 ,消费者从指定的队列中消息-->
+    <!-- <rabbit:listener-container connection-factory="connectionFactory" acknowledge="auto">
+    	<rabbit:listener queues="boy" ref="consumer"/>
+    	<rabbit:listener queues="girl" ref="consumer2"/>
+    	<rabbit:listener queues="love" ref="consumer2"/>
+    </rabbit:listener-container> -->  
+       
+       
+</beans>

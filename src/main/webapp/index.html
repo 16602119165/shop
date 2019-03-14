@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>shop后台管理首页</title>
+
+<!-- $('#ff').form('submit', {
+    url:...,
+    onSubmit: function(){
+		if($(":text:eq(0)").val() == ""){
+			$.messager.alert("系统信息","用户名不能为空")
+			return false;
+		}
+		else if($(":password:eq(0)").val() == ""){
+			$.messager.alert("系统信息","密码不能为空")
+			return false;
+		}
+    },
+    success:function(data){
+		alert(data)
+    }
+}); -->
+
+	<!-- 引入jquery  -->
+	<script type="text/javascript" src="js/jquery-easyui/jquery.min.js"></script>
+	<!-- 引入easyui  -->
+	<script type="text/javascript" src="js/jquery-easyui/jquery.easyui.min.js"></script>
+<link href="css/login.css" rel="stylesheet" type="text/css" />
+<!-- 引入EasyUI的样式文件-->
+	<link rel="stylesheet" type="text/css" href="js/jquery-easyui/themes/default/easyui.css">
+	<!-- 引入EasyUI的图标样式文件-->
+	<link rel="stylesheet" type="text/css" href="js/jquery-easyui/themes/icon.css">
+	<!-- 引入EasyUI的中文国际化js，让EasyUI支持中文 -->
+    <script type="text/javascript" src="js/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+	<!-- /* data:$('#loginForm').serialize(), */ -->
+<script type="text/javascript">
+	var loginAndRegDialog;
+	/* var name = $('#name').validatebox('getValue'); */
+	$(function(){
+		loginAndRegDialog = $('#loginAndRegDialog').dialog({
+		modal:true,
+		buttons:[{
+			text:"注册",
+			handler : function(){
+			
+			}
+		},{
+			text:"登录",
+			handler : function(){
+			 $.ajax({
+				type:'POST',
+				url:'http://localhost:8080/login',
+				data:$('#loginForm').serialize(),
+				dataType:'json',
+				success:function(result){
+					if(result && result.status == 0){
+						loginAndRegDialog.dialog('close');
+						$.messager.show({
+							title:'提示',
+							msg:"登录成功",
+							timeout:5000
+						});
+						
+					}else{
+						$.messager.alert('标题',result.message);
+					}
+					window.location="../page/main.html"	
+				}
+			});
+			}
+		} ]
+		
+		});
+	});
+</script>
+<title>Shop后台管理系统</title>
+
+</head>
+<body>
+	
+	<div id="loginAndRegDialog" title="用户登录" style="width:400px;height:200px;">
+		<form id="loginForm" method="post">
+			<table>
+				<tr>
+					<th align="right">用户名</th>
+					<td><input name="name" class="easyui-validatebox" data-options="required:true"/></td>
+				</tr>
+				<tr>
+					<th align="right">密码</th>
+					<td><input name="pass"  class="easyui-validatebox" data-options="required:true" type="password" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+		
+
+</body>
+</html>

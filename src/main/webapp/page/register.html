@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>注册</title>
+<script type="text/javascript" src="../js/jquery-3.3.1.js"></script>
+<script type="text/javascript">
+	
+	function click(){
+		/* $(register).click(function(){*/
+			/*提交表单，根据button绑定是函数来执行请求的操作  */
+			$.ajax({
+				type:"POST",
+				cache:false
+				url:"/register",
+				data:{registerName:$("#registerName").val(),registerPsw:$("#registerPsw").val()},
+				dataType:"json",
+				success:function(result){
+					console.log(result),
+					alert(result.message);
+					}
+				}
+			/* }) */
+	}
+	
+
+	
+</script>
+</head>
+<body>
+	<h1>index</h1>
+
+	<form action="http://localhost:8080/register" method="post">
+				<div id="regName">
+					账号<input type="text" name="registerName">
+				</div>
+				<div id="regPassword">
+					密码<input type="password" name="registerPsw">
+				</div>
+				<div id="sub">
+					<input type="submit" value="注册">
+				</div>	
+		</form>
+		
+	
+	<div id="loginDiv">
+		<form>
+			<input id='name' />
+			<input id='password' />
+			<button onclick="login()">登录</button>
+		<form>
+	</div>
+
+	<script type="text/javascript">
+		function login(){
+			alert('btn1 test');
+		};		
+	</script>
+	
+	
+</body>
+</html>
