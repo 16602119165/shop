@@ -11,9 +11,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+import com.zhoubo.basic.Result;
 import com.zhoubo.dto.ProductDTO;
 import com.zhoubo.pojo.Product;
 import com.zhoubo.pojo.UIDatagrid;
+import com.zhoubo.service.FileService;
 import com.zhoubo.service.ProductService;
 
 @Controller
@@ -23,6 +27,10 @@ public class ProductController {
 	@Autowired
 	@Qualifier("psi")
 	ProductService psi;
+	
+	@Autowired
+	@Qualifier("downloadImp")
+	FileService downloadImp;
 	
 	@Autowired
 	ProductService productServiceImp;
@@ -96,15 +104,25 @@ public class ProductController {
 	@RequestMapping("init")
 	@ResponseBody
 	public UIDatagrid<Product> productInit(){
+		ProductDTO productDTO = new ProductDTO();
+		productDTO.setProductStat(10);
+		UIDatagrid<Product> datagrid = productServiceImp.getDatagrid(productDTO);
+		if(null != datagrid) {
+			return datagrid;
+		}	
 		return null;
 	};
 	//下载商品信息模板
 	@RequestMapping("/downloadFile")
 	@ResponseBody
-	public void downloadFile() {
-		
+	public void downloadFile(HttpServletRequest request,HttpServletResponse response) {
+		response.setContentType("charset=UTF-8");
+		downloadImp.getProductInformationFile(response);
 	};
 	
+	public Result uploadFile(HttpServletRequest request) {
+		return null;
+	}
 	
 	
 	

@@ -46,6 +46,7 @@
 	
 	
 <script type="text/javascript">
+var dowonLoadModelFile;
 	$(function(){
 		$('#datagrid').datagrid({
 			url:'/product/init',
@@ -84,6 +85,9 @@
 				handler:function(){
 					$("#importProduct").attr("disabled", false);
 					$('#importProduct').dialog('open');
+					dowonLoadModelFile = function dowonLoadModelFile(){
+						window.location = "/product/downloadFile";
+					};
 				}},{
 				text:'修改',
 				iconCls:'icon-edit',
@@ -109,9 +113,7 @@
 			]
 		});
 		
-		function dowonLoadModelFile(){
-			window.location = "/product/downloadFile";
-		};
+		
 		
 		
 	});
