@@ -1,5 +1,6 @@
 package com.zhoubo.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -12,4 +13,6 @@ public interface ProductMapper {
 	
 	List<Product> seleProducts(@Param("productDTO")ProductDTO productDTO);
 	long count1(@Param("productDTO")ProductDTO productDTO);
+	
+	
 }
