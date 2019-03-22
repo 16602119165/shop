@@ -178,8 +178,19 @@
 		    <artifactId>lombok</artifactId>
 		    <version>1.16.16</version>
 		</dependency>-->
-
- 
+		
+		<!-- POI的依赖 -->
+		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
+ 		<!-- POIooxml的依赖 -->
+ 		<dependency>
+		    <groupId>org.apache.poi</groupId>
+		    <artifactId>poi-ooxml</artifactId>
+		    <version>4.0.1</version>
+		</dependency>
 		
 		
   

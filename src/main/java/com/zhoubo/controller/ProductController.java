@@ -1,4 +1,7 @@
 package com.zhoubo.controller;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,14 +14,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.annotation.JsonAppend.Attr;
+import com.mysql.fabric.xmlrpc.base.Array;
 import com.zhoubo.basic.Result;
 import com.zhoubo.dto.ProductDTO;
+import com.zhoubo.enums.FileUpload;
 import com.zhoubo.pojo.Product;
 import com.zhoubo.pojo.UIDatagrid;
 import com.zhoubo.service.FileService;
 import com.zhoubo.service.ProductService;
+import com.zhoubo.service.ProductServiceImp;
+import com.zhoubo.util.FileUtil;
 
 @Controller
 @RequestMapping("/product")
@@ -26,7 +34,7 @@ public class ProductController {
 	private static Logger log = LoggerFactory.getLogger(ProductController.class);
 	@Autowired
 	@Qualifier("psi")
-	ProductService psi;
+	ProductServiceImp psi;
 	
 	@Autowired
 	@Qualifier("downloadImp")
@@ -120,8 +128,33 @@ public class ProductController {
 		downloadImp.getProductInformationFile(response);
 	};
 	
-	public Result uploadFile(HttpServletRequest request) {
-		return null;
+	@RequestMapping("/uploadFile")
+	@ResponseBody
+	public Result uploadFile(MultipartFile file, HttpServletRequest request) {
+		Result result = new Result();
+		List<String[]> strings = new ArrayList<String[]>();
+		try {
+			File file2 = FileUtil.fileUpload(FileUpload.productDir.getDir(), file.getOriginalFilename(), file.getBytes());
+			strings = FileUtil.readExcle(file2);
+			int total = psi.read(strings);
+			
+			if(null == file2) {
+				result.setStatus(1);
+				result.setMessage("磁盘空间已满，请删除不需要的文件");
+				return result;
+			}else if(total != 0){
+				result.setStatus(0);
+				result.setMessage("文件上传成功");
+				return result;
+			}else if (total == 0) {
+				result.setStatus(3);
+				result.setMessage("文件上传成功,poi读取失败");
+				return result;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	

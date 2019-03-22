@@ -64,8 +64,19 @@
 			</where>
 	</select>
 	
+	<insert id="insertByExcel" >
+		<if test="products != null">
+		insert into product (<include refid="basic_column_list"></include>)
+			values 
+			<foreach collection="list" item="products" index="index" open="(" separator="," close=")" >
+				#{products.categoryParentId},#{products.productType},#{products.productStock},
+				#{products.productCreateDate},#{products.productUpdateTime},#{products.productPrice},
+				#{products.productActivityPrice},#{products.productCreator},#{products.productName},
+				#{products.categoryName}
+			</foreach>
+		</if>
+	</insert>
 
-	
 	
 	
 	<!-- paramterType 可以省略 -->
