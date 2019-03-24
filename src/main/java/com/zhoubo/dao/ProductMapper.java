@@ -14,5 +14,6 @@ public interface ProductMapper {
 	List<Product> seleProducts(@Param("productDTO")ProductDTO productDTO);
 	long count1(@Param("productDTO")ProductDTO productDTO);
 	
+	int insertByExcel(@Param(value="products")List<Product> products);
 	
 }

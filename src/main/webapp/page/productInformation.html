@@ -37,7 +37,7 @@
 				handler:function(){dowonLoadModelFile()}
 			}]">   
    		   <form id='importProductForm' method="post" enctype="multipart/form-data" style="position:absolute;top:75px">
-   		   	<input class="easyui-filebox" id='file' name = 'file' style="width:200px" data-options="buttonText:'选择上传文件'">
+   		   	<input class="easyui-filebox" id='file' name = 'file' accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" style="width:200px" data-options="buttonText:'选择上传文件'">
    		   </form>
    		   <div style="position:absolute;right:20px;bottom:20px;">
 			<input type="button" id="importProductBtn" onclick="importProductFile()" value='导入'>
@@ -117,6 +117,50 @@ var dowonLoadModelFile;
 		
 		
 	});
+	var importProductFile = function(){
+		$('#importProductForm').form('submit',{
+			url:'/product/uploadFile',
+			onSubmit:function(){
+				var fileName = $('#file').filebox('getValue');
+				<!--fileNmae.split('.')返回的是一个数组，取最后一个值 -->
+				var fileType = fileName.split('.')[fileName.split('.').length-1];
+				if(null == fileName || "" == fileName){
+					$.messager.alert("警告","请选择导入的文件","warning" );
+					return false;
+				}
+				if(fileType != "xlsx" && fileType !="xls"){
+					$.messager.alert("警告","文件格式不匹配，xls或xlsx","warning");
+					return false;
+				}
+				$("#importProductBtn").attr("disabled", true); 
+			},
+			success:function(data){
+				<!-- var r = data; -->
+				<!-- var result = eval('(' + r + ')');-->
+				var result = $.parseJSON(data)
+				if(result.status == 0){
+					$.messager.show({
+						title:'提示',
+						msg:result.message,
+						timeout:5000
+					});
+				}else if(result.status == 1){
+					$.messager.show({ 
+						title:'提示',
+						msg:result.message,
+						timeout:5000
+					});
+				}else{
+					$.messager.show({ 
+						title:'提示',
+						msg:result.message,
+						timeout:5000
+					});
+				}
+			}
+		});
+	}
+	
 </script>
 
 
