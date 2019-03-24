@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -135,7 +136,16 @@ public class FileUtil {
 							//10.遍历当前行的每一个cell单元格
 							Cell cell = row.getCell(cellNum);
 							//11.string 数组中每一位都给赋值同步。
-							cells[cellNum] = cell.getStringCellValue();
+							switch(cell.getCellType()) {
+							case STRING:
+								cells[cellNum] = cell.getStringCellValue();
+								break;
+							case NUMERIC:
+								cells[cellNum] = String.valueOf(cell.getNumericCellValue());
+								break;
+							}
+							
+							
 						}
 						list.add(cells);
 					}
