@@ -124,7 +124,7 @@ public class FileUtil {
 					int fristRow = sheet.getFirstRowNum();
 					int lastRow = sheet.getLastRowNum();
 					//5.遍历除了第一行之外的所有行
-					for(int rowNum = fristRow + 1;rowNum < lastRow; rowNum++ ) {
+					for(int rowNum = fristRow + 1;rowNum <= lastRow; rowNum++ ) {
 						//6.获得当前行row
 						row = sheet.getRow(rowNum);
 						//7获得当前行开始列以及结束列

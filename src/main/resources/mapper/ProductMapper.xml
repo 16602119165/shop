@@ -64,20 +64,28 @@
 			</where>
 	</select>
 	
-	<insert id="insertByExcel" >
+	<insert id="insertByExcel">
 		<if test="products != null">
-		insert into product (<include refid="basic_column_list"></include>)
+		insert into product (category_parent_id,product_type,product_stock,product_create_date,product_update_time,product_price,
+	product_activity_price,product_creator,product_name,category_name)
 			values 
-			<foreach collection="list" item="products" index="index" open="(" separator="," close=")" >
-				#{products.categoryParentId},#{products.productType},#{products.productStock},
+			<foreach collection="products" item="products" index="index"  separator="," >
+				(#{products.categoryParentId},#{products.productType},#{products.productStock},
 				#{products.productCreateDate},#{products.productUpdateTime},#{products.productPrice},
 				#{products.productActivityPrice},#{products.productCreator},#{products.productName},
-				#{products.categoryName}
+				#{products.categoryName})
 			</foreach>
 		</if>
 	</insert>
 
+	<select id="checkByName" resultMap="product">
+		select * from product where product_name=
+			<foreach collection="products" item="products" index="index"  separator="," >
+				(#{products.productName})
+			</foreach>
 	
+	
+	</select>
 	
 	<!-- paramterType 可以省略 -->
 	<!-- 如果主键是自增，那么sql语句可以不用写 -->

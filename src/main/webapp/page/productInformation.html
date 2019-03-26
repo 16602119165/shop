@@ -132,25 +132,28 @@ var dowonLoadModelFile;
 					$.messager.alert("警告","文件格式不匹配，xls或xlsx","warning");
 					return false;
 				}
-				$("#importProductBtn").attr("disabled", true); 
+				$("#importProduct").attr("disabled", true); 
 			},
 			success:function(data){
 				<!-- var r = data; -->
 				<!-- var result = eval('(' + r + ')');-->
 				var result = $.parseJSON(data)
 				if(result.status == 0){
+					$('#importProduct').dialog('close');
 					$.messager.show({
 						title:'提示',
 						msg:result.message,
 						timeout:5000
 					});
 				}else if(result.status == 1){
+					$('#importProduct').dialog('close');
 					$.messager.show({ 
 						title:'提示',
 						msg:result.message,
 						timeout:5000
 					});
 				}else{
+					$('#importProduct').dialog('close');
 					$.messager.show({ 
 						title:'提示',
 						msg:result.message,

@@ -15,5 +15,5 @@ public interface ProductMapper {
 	long count1(@Param("productDTO")ProductDTO productDTO);
 	
 	int insertByExcel(@Param(value="products")List<Product> products);
-	
+	List<Product> checkByName(@Param(value="products")List<Product> products);
 }

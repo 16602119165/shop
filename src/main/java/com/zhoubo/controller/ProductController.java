@@ -131,24 +131,20 @@ public class ProductController {
 	@RequestMapping("/uploadFile")
 	@ResponseBody
 	public Result uploadFile(MultipartFile file, HttpServletRequest request) {
-		Result result = new Result();
+		Result result = null;
 		List<String[]> strings = new ArrayList<String[]>();
 		try {
 			File file2 = FileUtil.fileUpload(FileUpload.productDir.getDir(), file.getOriginalFilename(), file.getBytes());
 			strings = FileUtil.readExcle(file2);
-			int total = psi.read(strings);
+			 result = psi.read(strings);
 			
 			if(null == file2) {
 				result.setStatus(1);
 				result.setMessage("磁盘空间已满，请删除不需要的文件");
 				return result;
-			}else if(total != 0){
-				result.setStatus(0);
-				result.setMessage("文件上传成功");
+			}else if(result.getStatus() != 0){
 				return result;
-			}else if (total == 0) {
-				result.setStatus(3);
-				result.setMessage("文件上传成功,poi读取失败");
+			}else if (result.getStatus() == 0) {
 				return result;
 			}
 		} catch (IOException e) {
